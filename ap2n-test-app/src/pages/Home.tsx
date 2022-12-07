@@ -1,5 +1,6 @@
 import { Button, Card, CardContent, Grid } from "@mui/material"
 import { FC } from "react"
+import { Link } from "react-router-dom"
 
 export const Home: FC = () => {
     return (
@@ -20,8 +21,8 @@ export const Home: FC = () => {
                 <Grid item xs={6}>
                     <Card>
                         <CardContent>
-                            <Button fullWidth color="primary">
-                                アップローダー
+                            <Button fullWidth color="primary" >
+                                <Link to="uploader">アップローダー</Link>
                             </Button>
                         </CardContent>
                     </Card>
