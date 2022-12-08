@@ -12,7 +12,7 @@ export const Home: FC = () => {
                     <Card>
                         <CardContent>
                             <Button fullWidth color="primary">
-                                操作者
+                                <Link to="controller">操作者</Link>
                             </Button>
                         </CardContent>
                     </Card>

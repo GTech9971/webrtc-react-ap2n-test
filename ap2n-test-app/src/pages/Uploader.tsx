@@ -1,16 +1,11 @@
-import { async } from "@firebase/util";
-import { Button, Grid, Input } from "@mui/material";
-import { FC, useCallback, useState } from "react";
+import { Button, Grid } from "@mui/material";
+import { FC, useCallback } from "react";
 import { VideoLocal } from "../components/VideoLocal";
 import { useUploaderRtcClient } from "../hooks/useUploaderRtcClient";
 import UploaderRtcClient from "../utils/UploaderRtcClient";
 
 export const Uploader: FC = () => {
     const uploaderRtcClient: UploaderRtcClient = useUploaderRtcClient() as UploaderRtcClient;
-    const [roomName, setRoomName] = useState<string>("");
-
-
-
 
     /**
      * 接続ボタン押下時にrtcをリッスンし、
@@ -18,9 +13,9 @@ export const Uploader: FC = () => {
      */
     const connectRoom = useCallback(async (e: any) => {
         await uploaderRtcClient.startListening();
-        await uploaderRtcClient.connect(roomName);
+        await uploaderRtcClient.connect();
         e.preventDefault();
-    }, [roomName, uploaderRtcClient]);
+    }, [uploaderRtcClient]);
 
 
     if (!uploaderRtcClient) { return <></> }
@@ -30,9 +25,6 @@ export const Uploader: FC = () => {
             <h2>Uploader</h2>
 
             <Grid container>
-                <Grid item xs={12}>
-                    <Input fullWidth type="text" placeholder="接続先" onChange={e => setRoomName(e.target.value)}></Input>
-                </Grid>
                 <Grid justifyContent="center" item xs={12}>
                     <Button fullWidth variant="outlined" onClick={async e => { await connectRoom(e) }}>
                         接続

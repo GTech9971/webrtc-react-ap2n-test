@@ -20,7 +20,6 @@ export const VideoLocal = (props: { uploaderRtcClient: UploaderRtcClient }) => {
     return (
         <div>
             <video ref={videoRef} autoPlay muted></video>
-            <div>Connect Room Name:{uploaderRtcClient.RoomName}</div>
         </div>
     )
 }

@@ -5,7 +5,7 @@ export interface OfferModel {
      * candidate:通信経路情報
      */
     type: "offer" | "answer" | "candidate",
-    sender: "controller" | "uploader",
+    sender: string,
     sessionDescription: any,
 
     candidate: any,

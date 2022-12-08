@@ -25,11 +25,7 @@ export default class FirebaseSignallingClient {
 
     public database: Database;
 
-    get targetRef(): DatabaseReference { return ref(this.database, this.RoomName); }
-
-    private _roomName: string = "";
-    public get RoomName(): string { return this._roomName; }
-    public set RoomName(val: string) { this._roomName = val; }
+    targetRef(senderName: string): DatabaseReference { return ref(this.database, senderName); }
 
     constructor() {
         const firebase = initializeApp(firebaseConfig);
@@ -40,36 +36,36 @@ export default class FirebaseSignallingClient {
      * offer情報をシグナリングサーバーに記録する
      * @param sessionDescription 
      */
-    public async sendOffer(sessionDescription: RTCSessionDescription) {
+    public async sendOffer(localPeerName: string, remotePeerName: string, sessionDescription: RTCSessionDescription) {
         const offerModel: OfferModel = {
             type: "offer",
-            sender: "uploader",
+            sender: localPeerName,
             sessionDescription: sessionDescription.toJSON(),
             candidate: null,
         };
 
-        await set(this.targetRef, offerModel);
+        await set(this.targetRef(remotePeerName), offerModel);
     }
 
-    public async sendAnswer(senderName: "controller" | "uploader", sessionDescription: RTCSessionDescription) {
+    public async sendAnswer(localPeerName: string, remotePeerName: string, sessionDescription: RTCSessionDescription) {
         const offerModel: OfferModel = {
             type: "answer",
-            sender: senderName,
+            sender: localPeerName,
             sessionDescription: sessionDescription.toJSON(),
             candidate: null,
         };
 
-        await set(this.targetRef, offerModel);
+        await set(this.targetRef(remotePeerName), offerModel);
     }
 
-    public async sendCandidate(senderName: "controller" | "uploader", candidate: RTCIceCandidateInit) {
+    public async sendCandidate(localPeerName: string, remotePeerName: string, candidate: RTCIceCandidateInit) {
         const candidateModel: OfferModel = {
             type: "candidate",
-            sender: senderName,
+            sender: localPeerName,
             candidate: candidate,
             sessionDescription: null,
         };
-        await set(this.targetRef, candidateModel);
+        await set(this.targetRef(remotePeerName), candidateModel);
     }
 
     public async remove(localPeerName: string) {
