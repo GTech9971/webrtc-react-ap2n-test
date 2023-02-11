@@ -1,0 +1,7 @@
+{
+  "name": "ap2n-test-ionic",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
