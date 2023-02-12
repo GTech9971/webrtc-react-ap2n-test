@@ -1,4 +1,4 @@
-import { DatabaseReference, onValue, ref } from "firebase/database";
+import { doc, DocumentData, DocumentReference, onSnapshot } from "firebase/firestore";
 import FirebaseSignallingClient from "./FirebaseSignallingClient";
 
 export default class UploaderRtcClient {
@@ -47,9 +47,9 @@ export default class UploaderRtcClient {
     public async startListening() {
         await this.firebaseSignallingClient.remove("uploader");
 
-        const signallingRef: DatabaseReference = ref(this.firebaseSignallingClient.database, "uploader");
-        onValue(signallingRef, async (snapshot) => {
-            const data = snapshot.val();
+        const signallingRef: DocumentReference<DocumentData> = doc(this.firebaseSignallingClient.database, "rooms", "uploader");
+        onSnapshot(signallingRef, async (snapshot) => {
+            const data: DocumentData | undefined = snapshot.data();
             console.log(data);
             if (!data) { return; }
 

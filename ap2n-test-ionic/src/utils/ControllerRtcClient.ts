@@ -1,4 +1,4 @@
-import { DatabaseReference, onValue, ref } from "firebase/database";
+import { doc, DocumentData, DocumentReference, onSnapshot } from "firebase/firestore";
 import React from "react";
 import FirebaseSignallingClient from "./FirebaseSignallingClient";
 
@@ -24,10 +24,10 @@ export default class ControllerRtcClient {
 
     public async startListening() {
         await this.firebaseSignallingClient.remove("controller");
-
-        const signallingRef: DatabaseReference = ref(this.firebaseSignallingClient.database, "controller");
-        onValue(signallingRef, async (snapshot) => {
-            const data = snapshot.val();
+        console.log('thor');
+        const signallingRef: DocumentReference<DocumentData> = doc(this.firebaseSignallingClient.database, "rooms", "controller");
+        onSnapshot(signallingRef, async (snapshot) => {
+            const data: DocumentData | undefined = snapshot.data();
             console.log(data);
             if (!data) { return; }
 

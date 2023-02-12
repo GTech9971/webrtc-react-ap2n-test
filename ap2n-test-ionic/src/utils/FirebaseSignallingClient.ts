@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getDatabase, Database, set, ref, DatabaseReference, remove, } from "firebase/database";
+import { doc, DocumentData, DocumentReference, Firestore, getFirestore, setDoc } from 'firebase/firestore';
 import { OfferModel } from "../models/Offer.model";
 
 
@@ -23,13 +23,14 @@ const firebaseConfig = {
 
 export default class FirebaseSignallingClient {
 
-    public database: Database;
 
-    targetRef(senderName: string): DatabaseReference { return ref(this.database, senderName); }
+    public readonly database: Firestore;
+
+    targetRef(senderName: string): DocumentReference<DocumentData> { return doc(this.database, 'rooms', senderName); }
 
     constructor() {
         const firebase = initializeApp(firebaseConfig);
-        this.database = getDatabase(firebase);
+        this.database = getFirestore(firebase);
     }
 
     /**
@@ -44,7 +45,7 @@ export default class FirebaseSignallingClient {
             candidate: null,
         };
 
-        await set(this.targetRef(remotePeerName), offerModel);
+        await setDoc(this.targetRef(remotePeerName), offerModel, { merge: true });
     }
 
     public async sendAnswer(localPeerName: string, remotePeerName: string, sessionDescription: RTCSessionDescription) {
@@ -55,7 +56,7 @@ export default class FirebaseSignallingClient {
             candidate: null,
         };
 
-        await set(this.targetRef(remotePeerName), offerModel);
+        await setDoc(this.targetRef(remotePeerName), offerModel, { merge: true });
     }
 
     public async sendCandidate(localPeerName: string, remotePeerName: string, candidate: RTCIceCandidateInit) {
@@ -65,10 +66,10 @@ export default class FirebaseSignallingClient {
             candidate: candidate,
             sessionDescription: null,
         };
-        await set(this.targetRef(remotePeerName), candidateModel);
+        await setDoc(this.targetRef(remotePeerName), candidateModel, { merge: true });
     }
 
     public async remove(localPeerName: string) {
-        await remove(ref(this.database, localPeerName));
+        await setDoc(doc(this.database, 'rooms', localPeerName), {});
     }
 }
