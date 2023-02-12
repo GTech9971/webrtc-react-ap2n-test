@@ -1,5 +1,5 @@
 import { doc, DocumentData, DocumentReference, onSnapshot } from "firebase/firestore";
-import React from "react";
+import { RefObject } from "react";
 import FirebaseSignallingClient from "./FirebaseSignallingClient";
 
 export default class ControllerRtcClient {
@@ -11,7 +11,8 @@ export default class ControllerRtcClient {
     public mediaStream: MediaStream | null;
 
 
-    constructor(public remoteVideoRef: React.RefObject<HTMLVideoElement>,
+    constructor(public remoteVideoRef: RefObject<HTMLVideoElement>,
+        public secondRemoteVideRef: RefObject<HTMLVideoElement>,
         public setRtcClient: (rtcClient: ControllerRtcClient) => void,) {
 
         const config: RTCConfiguration = { iceServers: [{ urls: "stun:stun.stunprotocol.org" }] }
@@ -123,6 +124,8 @@ export default class ControllerRtcClient {
 
             const remoteMediaStream: MediaStream = rtcTrackEvent.streams[0];
             this.remoteVideoRef.current!.srcObject = remoteMediaStream;
+            //second ref
+            this.secondRemoteVideRef.current!.srcObject = remoteMediaStream;
             this.setRtcClient(this);
         }
         this.setRtcClient(this);

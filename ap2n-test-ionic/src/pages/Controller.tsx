@@ -1,4 +1,4 @@
-import { IonButton, IonContent, IonGrid, IonHeader, IonPage, IonRow, IonTitle, IonToolbar } from "@ionic/react";
+import { IonButton, IonContent, IonGrid, IonHeader, IonListHeader, IonPage, IonRow, IonTitle, IonToolbar } from "@ionic/react";
 import { FC, useCallback } from "react"
 import { VideoRemote } from "../components/VideoRemote";
 import { useControllerRtcClient } from "../hooks/useControllerRtcClient"
@@ -32,7 +32,12 @@ export const Controller: FC = () => {
                         <IonButton onClick={async e => { await openRoom(e) }}>開始</IonButton>
                     </IonRow>
                     <IonRow>
-                        <VideoRemote controllerRtcClient={controllerRtcClient} />
+                        {/* first ref */}
+                        <IonListHeader>First Video Ref</IonListHeader>
+                        <VideoRemote videoRef={controllerRtcClient.remoteVideoRef} />
+                        {/* second ref */}
+                        <IonListHeader>Second Video Ref</IonListHeader>
+                        <VideoRemote videoRef={controllerRtcClient.secondRemoteVideRef} />
                     </IonRow>
                 </IonGrid>
             </IonContent>

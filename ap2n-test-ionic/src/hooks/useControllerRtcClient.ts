@@ -4,6 +4,7 @@ import ControllerRtcClient from "../utils/ControllerRtcClient";
 export const useControllerRtcClient = () => {
     const [rtcClient, _setRtcClient] = useState<ControllerRtcClient>();
     const remoteVideoRef = useRef(null);
+    const secondVideoRef = useRef(null);
     const [, forceRender] = useReducer(flg => !flg, false);
 
     // クラスの更新をデフォルトのsetStateで行なっても際レンダリングされないので、
@@ -15,7 +16,7 @@ export const useControllerRtcClient = () => {
 
     useEffect(() => {
         const init = async () => {
-            const client: ControllerRtcClient = new ControllerRtcClient(remoteVideoRef, setRtcClient);
+            const client: ControllerRtcClient = new ControllerRtcClient(remoteVideoRef, secondVideoRef, setRtcClient);
             client.setRtcClient(client);
         }
         init();

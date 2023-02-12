@@ -1,10 +1,7 @@
-import ControllerRtcClient from "../utils/ControllerRtcClient";
+import { RefObject } from "react";
 
-export const VideoRemote = (props: { controllerRtcClient: ControllerRtcClient }) => {
-    const { controllerRtcClient } = props;
-    const videoRef = controllerRtcClient.remoteVideoRef;
-
+export const VideoRemote = (props: { videoRef: RefObject<HTMLVideoElement> }) => {
     return (
-        <video autoPlay muted ref={videoRef} />
+        <video autoPlay muted ref={props.videoRef} />
     )
 }
