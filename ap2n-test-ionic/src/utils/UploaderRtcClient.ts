@@ -23,16 +23,39 @@ export default class UploaderRtcClient {
      * MediaStreamの初期化と、音声・ビデオトラックをrtcに設定する
      */
     public async setMediaStream() {
-        const constrantraits: MediaStreamConstraints = { audio: true, video: true };
+        //const constrantraits: MediaStreamConstraints = { audio: true, video: true }; //この設定なら受信できる
+
+        const constrantraits: MediaStreamConstraints = {
+            audio: true,
+            video: {
+                facingMode: { exact: 'environment' }
+            }
+        };
+        // const constrantraits: MediaStreamConstraints = {
+        //     audio: true,
+        //     video: {
+        //         width: { max: 1920 },
+        //         height: { max: 1080 },
+        //         facingMode: { exact: "environment" }
+        //     }
+        // };
+
+        //カメラの初期化
         try {
             this.mediaStream = await navigator.mediaDevices.getUserMedia(constrantraits);
-            const audioTrack = this.mediaStream!.getAudioTracks()[0];
-            const videoTrack = this.mediaStream.getVideoTracks()[0];
-            this.rctPeerConnection.addTrack(audioTrack, this.mediaStream);
-            this.rctPeerConnection.addTrack(videoTrack, this.mediaStream);
         } catch (e) {
-            throw e
+            //背面カメラが存在しない場合は、フロントカメラで代用
+            if (e instanceof OverconstrainedError) {
+                this.mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+            } else {
+                throw e
+            }
         }
+
+        const audioTrack = this.mediaStream.getAudioTracks()[0];
+        const videoTrack = this.mediaStream.getVideoTracks()[0];
+        this.rctPeerConnection.addTrack(audioTrack, this.mediaStream);
+        this.rctPeerConnection.addTrack(videoTrack, this.mediaStream);
         this.setRtcClient(this);
     }
 

@@ -1,0 +1,32 @@
+.calibration-manual {
+    ion-row,
+    ion-col {
+        display: flex;
+        justify-content: center;
+    }
+    video {
+        height: 80vh;
+    }
+
+    .draw-canvas {
+        position: absolute;
+        touch-action: none;
+    }
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+}
+
+.modal {
+    ion-card {
+        text-align: center;
+        width: 100%;
+    }
+
+    img {
+        max-height: 35vh;
+        object-fit: contain;
+    }
+}
