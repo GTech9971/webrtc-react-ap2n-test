@@ -21,6 +21,7 @@ export default class UploaderRtcClient {
 
     /**
      * MediaStreamの初期化と、音声・ビデオトラックをrtcに設定する
+     * @see https://anton0825.hatenablog.com/entry/2016/08/24/000000
      */
     public async setMediaStream() {
         //const constrantraits: MediaStreamConstraints = { audio: true, video: true }; //この設定なら受信できる
@@ -28,6 +29,8 @@ export default class UploaderRtcClient {
         const constrantraits: MediaStreamConstraints = {
             audio: true,
             video: {
+                width: { max: 1280 },
+                height: { max: 720 },
                 facingMode: { exact: 'environment' }
             }
         };
@@ -54,6 +57,12 @@ export default class UploaderRtcClient {
 
         const audioTrack = this.mediaStream.getAudioTracks()[0];
         const videoTrack = this.mediaStream.getVideoTracks()[0];
+
+        console.log(videoTrack.getCapabilities());
+        console.log(videoTrack.getConstraints());
+        console.log(videoTrack.getSettings());
+
+
         this.rctPeerConnection.addTrack(audioTrack, this.mediaStream);
         this.rctPeerConnection.addTrack(videoTrack, this.mediaStream);
         this.setRtcClient(this);
